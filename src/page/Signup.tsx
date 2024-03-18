@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../firebase_setup/firebase.js';
 import {AppStateContext} from '../app-state.tsx';
 
  
@@ -48,8 +48,7 @@ const {
     <main >        
         <section>
             <div>
-                <div>                  
-                    <h1> FocusApp </h1>                                                                            
+                <div>                                                                                          
                     <form>                                                                                            
                         <div>
                             <label htmlFor="email-address">

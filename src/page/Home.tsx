@@ -1,10 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from '../firebase';
+import React, { useContext } from 'react';
 import {AppStateContext} from '../app-state.tsx';
-import Signup from './Signup.tsx';
-import Login from './Login.tsx';
 import Dashboard from './Dashboard.tsx';
+import Login from './Login.tsx';
  
 const Home = () => {
 const myContextValue = useContext(AppStateContext);
@@ -16,29 +13,14 @@ if (!myContextValue) {
 }
 const { 
    isLoggedIn,
-   setIsLoggedIn
 } = myContextValue;
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-useEffect(()=>{
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          const uid = user.uid;
-          setIsLoggedIn(true)
-          console.log("uid", uid)
-        } else {
-            setIsLoggedIn(false)
-          console.log("user is logged out")
-        }
-      });
-     
-}, [])
+
  
   return (
     <section>        
-    {isLoggedIn ? <Signup /> : <div> <Dashboard /></div>}
+    {isLoggedIn ? <Login /> : <div> <Dashboard /></div>}
     </section>
   )
 }
