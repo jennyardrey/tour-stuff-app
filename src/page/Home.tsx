@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import {AppStateContext} from '../app-state.tsx';
 import Dashboard from './Dashboard.tsx';
-import Login from './Login.tsx';
+import Login from '../components/Login.tsx';
+import styles from "../styles/Home.module.scss"
  
 const Home = () => {
 const myContextValue = useContext(AppStateContext);
@@ -19,8 +20,8 @@ const {
 
  
   return (
-    <section>        
-    {isLoggedIn ? <Login /> : <div> <Dashboard /></div>}
+    <section className={styles.background}>        
+    {!isLoggedIn ? <Login /> : <div> <Dashboard /></div>}
     </section>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {AppStateContext, SubListType, SubListItem} from '../app-state.tsx';
 import { useParams } from 'react-router-dom';
-import AddItem from "./AddItem.tsx"
+import AddItem from "../components/AddItem.tsx"
 
 const ListMain = () => {
 const myContextValue = useContext(AppStateContext);

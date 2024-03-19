@@ -5,7 +5,7 @@ import toKebabCase from '../helpers/toKebabCase.js';
  
 const ListMain = () => {
 const myContextValue = useContext(AppStateContext);
-const { listName } = useParams<{ listName: string }>();
+const { listId } = useParams<{ listId: any }>();
 const [childLists, setChildLists] = useState<SubListType[] | undefined>()
 // Perform a null check on myContextValue
 if (!myContextValue) {
@@ -13,22 +13,27 @@ if (!myContextValue) {
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-    sublists
+    sublists,
+    fetchSublistsForMainList
 } = myContextValue;
 
 
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useEffect(()=>{
-   const childLists = sublists.filter(list => list.parentList === listName)
-   setChildLists([...childLists])
+    console.log('listid working: ', listId)
+    console.log('listid kebabed: ', toKebabCase(listId))
+    fetchSublistsForMainList(listId)
+    .then(res => setChildLists(res))
+    console.log('child',childLists)
+//    setChildLists([...childLists])
 }, [])
  
   return (
     <>
     <section>        
     {childLists?.map(list =>
-    <NavLink to={`/sublist/${toKebabCase(list.name)}`} >
+    <NavLink to={`/sublist/${list.id}`} >
     {list.name}
     {list.isRepeating}
     {list.repeatDays}
@@ -36,7 +41,7 @@ useEffect(()=>{
   )}
     </section>
     <section>
-    <NavLink to={`/create-sublist/${toKebabCase(listName)}`} >create new sub list</NavLink>
+    <NavLink to={`/create-sublist/${listId}`} >create new sub list</NavLink>
     </section>
     </>
   )

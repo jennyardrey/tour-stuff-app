@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {  signInWithEmailAndPassword   } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase';
 import { NavLink, useNavigate } from 'react-router-dom'
+import styles from "../styles/Login.module.scss"
+import logo from "../assets/FreeLogo.png"
  
 const Login = () => {
     const navigate = useNavigate();
@@ -27,11 +29,12 @@ const Login = () => {
  
     return(
         <>
-            <main >        
-                <section>
-                    <div>                                            
-                        <form>                                              
-                            <div>
+               
+                <section className={styles.main}>
+                        <img className={styles.logo} alt="logo for tour stuff" src={logo} />                       
+                        <form className={styles.loginBox}>  
+                        <h2>Login</h2>                                            
+                            <div className={styles.userBox}>
                                 <label htmlFor="email-address">
                                     Email address
                                 </label>
@@ -45,7 +48,7 @@ const Login = () => {
                                 />
                             </div>
 
-                            <div>
+                            <div className={styles.userBox}>
                                 <label htmlFor="password">
                                     Password
                                 </label>
@@ -59,25 +62,24 @@ const Login = () => {
                                 />
                             </div>
                                                 
-                            <div>
+                  
                                 <button                                    
                                     onClick={onLogin}                                        
-                                >      
-                                    Login                                                                  
+                                >Login                                                                  
                                 </button>
-                            </div>                               
+                                                          
                         </form>
                        
-                        <p className="text-sm text-white text-center">
+                        <p>
                             No account yet? {' '}
                             <NavLink to="/signup">
                                 Sign up
                             </NavLink>
                         </p>
                                                    
-                    </div>
+                  
                 </section>
-            </main>
+       
         </>
     )
 }

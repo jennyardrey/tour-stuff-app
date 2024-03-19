@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from 'react';
 
 import {AppStateContext} from '../app-state.tsx';
 import { NavLink } from 'react-router-dom';
+import Header from '../components/Header.tsx';
+import styles from "../styles/Dashboard.module.scss"
 
  
 const Home = () => {
@@ -18,23 +20,26 @@ const {
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useEffect(()=>{
-   
+   console.log(mainLists)
      
 }, [])
  
   return (
-    <section>        
-    <div>dashboard</div>
+    <>
+    <Header />
+    <section className={styles.main}>        
+    <div>DashMain</div>
 
     <NavLink to="/create-list" >Create new tour</NavLink>
 <div>
     {mainLists.map(list =>
-     <NavLink to={`/list/${list}`}>
-     {list}
+     <NavLink to={`/list/${list.uuid}`}>
+     {list.name}
    </NavLink>
   )}
   </div>
     </section>
+    </>
   )
 }
  

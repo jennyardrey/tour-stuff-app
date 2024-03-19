@@ -8,7 +8,7 @@ const navigate = useNavigate();
 const [sublistName, setSublistName] = useState('');
 const [isRepeating, setIsRepeating] = useState(false);
 const [repeatDays, setRepeatDays] = useState(['']);
-const { listName } = useParams<{ listName: string }>();
+const { listId } = useParams<{ listId: string }>();
 const dataRef = useRef()
 
 const myContextValue = useContext(AppStateContext);
@@ -19,7 +19,8 @@ if (!myContextValue) {
 }
 const { 
    sublists,
-   setSublist
+   setSublist,
+   addSublistToDatabase
 } = myContextValue;
 const handleSublistNameChange = (event) => {
     setSublistName(event.target.value);
@@ -47,12 +48,13 @@ const handleSublistNameChange = (event) => {
         isRepeating: isRepeating,
         repeatDays: isRepeating ? repeatDays : [],
         items: [],
-        parentList: listName
+        parentList: listId
     };
+    console.log('listid: ', listId)
     const updatedSublists: Array<SubListType> = [...sublists, sublistData ]
-
-   setSublist(updatedSublists)
-    navigate(`/list/${listName}`); // Navigate back to MainList component
+    addSublistToDatabase(sublistData)
+    setSublist(updatedSublists)
+    navigate(`/list/${listId}`); // Navigate back to MainList component
   };
 
  

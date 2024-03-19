@@ -3,6 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase.js';
 import {AppStateContext} from '../app-state.tsx';
+import styles from "../styles/Login.module.scss"
+import logo from "../assets/FreeLogo.png"
 
  
 const Signup = () => {
@@ -45,12 +47,13 @@ const {
     }
  
   return (
-    <main >        
-        <section>
-            <div>
-                <div>                                                                                          
-                    <form>                                                                                            
-                        <div>
+       
+        <section className={styles.main}>
+ <img className={styles.logo} alt="logo for tour stuff" src={logo} />           
+                                                                                                       
+                    <form className={styles.loginBox}>  
+                    <h2>Sign Up</h2>                                                                                           
+                        <div className={styles.userBox}>
                             <label htmlFor="email-address">
                                 Email address
                             </label>
@@ -63,7 +66,7 @@ const {
                             />
                         </div>
 
-                        <div>
+                        <div className={styles.userBox}>
                             <label htmlFor="password">
                                 Password
                             </label>
@@ -91,10 +94,10 @@ const {
                             Sign in
                         </NavLink>
                     </p>                   
-                </div>
-            </div>
+              
+         
         </section>
-    </main>
+
   )
 }
  

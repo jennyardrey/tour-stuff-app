@@ -1,0 +1,35 @@
+.main {
+    width: 100vw;
+    height: 100px;
+    position: fixed;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    img {
+        height: 100px;
+    }
+    button {
+        margin-right: 30px;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 16px;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        transition: .5s;
+        letter-spacing: 4px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:hover {
+            background: #f403dc;
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #f403dc,
+                    0 0 25px #f403dc,
+                    0 0 50px #f403dc,
+                    0 0 100px #f403dc;
+        }
+    }
+}

@@ -1,11 +1,11 @@
 import React, { useContext, useRef, useState } from 'react';
-import {AppStateContext} from '../app-state.tsx';
+import {AppStateContext, MainListType} from '../app-state.tsx';
 import { useNavigate } from 'react-router-dom';
  
 const CreateList = () => {
 const myContextValue = useContext(AppStateContext);
 const navigate = useNavigate();
-const [newList, setNewList] = useState<string>('')
+const [newList, setNewList] = useState<MainListType>('')
 const dataRef = useRef()
 // Perform a null check on myContextValue
 if (!myContextValue) {
@@ -13,15 +13,18 @@ if (!myContextValue) {
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-   setMainList
+   setMainList,
+   createMainList
 } = myContextValue;
 const handleInputChange = (event) => {
-    setNewList(event.target.value);
+    setNewList({name: event.target.value, uuid: ""});
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+    createMainList(newList.name)
+    .then(res => newList.uuid = res);
+
     setMainList(prevList => [...prevList, newList]);
     navigate("/home")
   };
@@ -34,7 +37,7 @@ const handleInputChange = (event) => {
       List Name:
       <input
         type="text"
-        value={newList}
+        value={newList.name}
         onChange={handleInputChange}
         required
       />
