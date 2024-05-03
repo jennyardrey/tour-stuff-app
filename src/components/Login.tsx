@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {  signInWithEmailAndPassword   } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase';
 import { NavLink, useNavigate } from 'react-router-dom'
 import styles from "../styles/Login.module.scss"
@@ -17,7 +17,6 @@ const Login = () => {
             // Signed in
             const user = userCredential.user;
             navigate("/home")
-            console.log(user);
         })
         .catch((error) => {
             const errorCode = error.code;

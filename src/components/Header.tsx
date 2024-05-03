@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
-import { AppStateContext, SubListItem, SubListType } from '../app-state.tsx';
-import logo from "../assets/FreeLogo.png"
+import React, { useContext } from 'react';
+import { AppStateContext } from '../app-state.tsx';
+import logo from "../assets/tourstufflogo.svg"
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase.js';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,6 @@ const {
     setIsLoggedIn
 } = myContextValue;
 
-console.log(isLoggedIn)
 
 const onLogout = (e) => {
     e.preventDefault();

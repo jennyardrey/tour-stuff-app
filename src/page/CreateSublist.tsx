@@ -1,6 +1,8 @@
 import React, { useContext, useRef, useState } from 'react';
 import {AppStateContext, SubListType} from '../app-state.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
+import Header from '../components/Header.tsx';
+import styles from '../styles/CreateList.module.scss'
  
 const CreateList = () => {
 
@@ -9,7 +11,6 @@ const [sublistName, setSublistName] = useState('');
 const [isRepeating, setIsRepeating] = useState(false);
 const [repeatDays, setRepeatDays] = useState(['']);
 const { listId } = useParams<{ listId: string }>();
-const dataRef = useRef()
 
 const myContextValue = useContext(AppStateContext);
 // Perform a null check on myContextValue
@@ -18,10 +19,13 @@ if (!myContextValue) {
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-   sublists,
-   setSublist,
-   addSublistToDatabase
+   currentSublists,
+   addSublistToDatabase,
+   setSubLists,
+   userId
 } = myContextValue;
+
+
 const handleSublistNameChange = (event) => {
     setSublistName(event.target.value);
   };
@@ -48,17 +52,20 @@ const handleSublistNameChange = (event) => {
         isRepeating: isRepeating,
         repeatDays: isRepeating ? repeatDays : [],
         items: [],
-        parentList: listId
+        parentList: listId,
+        ownerId: userId
     };
-    console.log('listid: ', listId)
-    const updatedSublists: Array<SubListType> = [...sublists, sublistData ]
+    const updatedSublists: Array<SubListType> = [...currentSublists, sublistData ]
     addSublistToDatabase(sublistData)
-    setSublist(updatedSublists)
+    setSubLists(updatedSublists)
     navigate(`/list/${listId}`); // Navigate back to MainList component
   };
 
  
   return (
+    <>
+    <Header />
+    <div className={styles.form}>
     <form onSubmit={handleSubmit}>
       <label>
         Sublist Name:
@@ -148,6 +155,9 @@ const handleSublistNameChange = (event) => {
       )}
       <button type="submit">Create Sublist</button>
     </form>
+    </div>
+    <button onClick={() => navigate(-1)}>Go back</button>
+    </>
   );
 }
  

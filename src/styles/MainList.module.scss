@@ -1,25 +1,20 @@
 .main {
     position: relative;
-    top: 100px;
+    top: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
 .listContainer {
     display: flex;
     flex-direction: column;
 }
 
-.item {
-    position: relative;
-}
-
 .tape {
     position: relative;
     display: inline-block;
+    padding: 20px;
     margin: 20px 0;
     span {
         z-index: 3;
@@ -44,7 +39,15 @@
     width: 100px; /* Adjust width as needed */
     height: 40px; /* Adjust height as needed */
     width: 300px;
-    height: 35px;
+    height: 65px;
     z-index: 0;
     background-size: 300px;
+  }
+
+  .createButton {
+    background-color: #6b370d;
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: 10rem;
+    text-decoration: none;
   }

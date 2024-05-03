@@ -1,24 +1,32 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppStateContext, SubListItem, SubListType } from '../app-state.tsx';
+import { useNavigate } from 'react-router-dom';
+
 
 function AddItem  ( {sublist} ) {
 const myContextValue = useContext(AppStateContext);
 const [itemName, setItemName] = useState('');
 const [isRepeating, setIsRepeating] = useState(false);
-const dataRef = useRef()
+const navigate = useNavigate();
 // Perform a null check on myContextValue
 if (!myContextValue) {
     // Handle the case when the context value is undefined
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-    sublists, 
-    setSublist
+    currentSublists, 
+    setCurrentSublists,
+    addItemToDatabase,
+    userId,
+    setCurrentItems,
+    subLists
+
 } = myContextValue;
 
 
-
-console.log('name:',sublist)
+const handleItemAdded = (newItem) => {
+  setCurrentItems(prevItems => [...prevItems, newItem]);
+};
 
   const handleItemNameChange = (event) => {
     setItemName(event.target.value);
@@ -27,36 +35,42 @@ console.log('name:',sublist)
   const handleRepeatingChange = (event) => {
     setIsRepeating(event.target.checked);
   };
-
+ 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const newItem: SubListItem = {
       name: itemName,
-      isRepeating: isRepeating
+      isRepeating: isRepeating,
+      sublistId: sublist,
+      isComplete: false,
+      userId: userId,
     };
-    
-    const updatedSubtask = {
-        ...sublist,
-        items: [...sublist.items] // Create a shallow copy of the original array
-      };
+
+    const findSublist: SubListType = subLists.filter(list => list.id === sublist)[0];
+     const updatedSubtask: SubListType = {
+        ...findSublist,
+        items: [...findSublist.items] // Create a shallow copy of the original array
+      }; 
       
       // Add the new item to the copied array
       updatedSubtask.items.push(newItem);
 
-    console.log('ust',updatedSubtask)
-    const updatedSublists: Array<SubListType> = sublists.map((sublist) => {
+      
+    const updatedSublists: any = subLists.map((sublist) => {
         if (sublist.name === updatedSubtask.name) {
           return updatedSubtask;
         }
         return sublist;
       });
-      setSublist(updatedSublists); // Updating the subtasks array in app state
+      addItemToDatabase(newItem)
+      handleItemAdded(newItem)
+      setCurrentSublists(updatedSublists); // Updating the subtasks array in app state
   
     // Reset form state after submission
     setItemName('');
     setIsRepeating(false);
-  };
+  }; 
 
   return (
     <div>
@@ -80,6 +94,7 @@ console.log('name:',sublist)
         </label>
         <button type="submit">Add Item</button>
       </form>
+      <button onClick={() => navigate(-1)}>Go back</button>
     </div>
   );
 };

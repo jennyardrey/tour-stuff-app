@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, ChangeEvent, FormEvent, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
 import { auth, db } from './firebase_setup/firebase';
 import 'firebase/firestore';
 
@@ -9,35 +9,139 @@ export interface SubListType {
     name: string;
     repeatDays: Array<string>;
     items: Array<SubListItem>;
-    parentList: string;
-    id: string;
+    parentList: string | undefined;
+    id?: string | undefined;
+    ownerId: string;
 }
 
 export interface MainListType {
     name: string;
     uuid: string;
+    id?: string;
 }
 export interface SubListItem {
+    id?: string | undefined;
     name: string;
     isRepeating: boolean;
+    sublistId: string;
+    isComplete: boolean;
+    userId: string;
 }
 interface AppState {
+  userId: string;
   isLoggedIn: boolean;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
   mainLists: Array<MainListType>
-  setMainList: Dispatch<SetStateAction<MainListType[]>>;
-  sublists: Array<SubListType>;
-  setSublist: Dispatch<SetStateAction<Array<SubListType>>>;
+  currentSublists: Array<SubListType>;
+  setCurrentSublists: Dispatch<SetStateAction<Array<SubListType>>>;
   createMainList: (listName: any) => Promise<any>;
-  fetchSublistsForMainList: (mainListId: string) => Promise<{ id: string; }[]>;
-  addSublistToDatabase: (sublist: SubListType) => Promise<any>
+  addSublistToDatabase: (sublist: SubListType) => Promise<any>;
+  addItemToDatabase: (item: SubListItem) => Promise<any>;
+  items: Array<SubListItem>;
+  updateItemInDatabase: (itemId: string, updatedItemData: SubListItem | undefined) => Promise<any>;
+  currentSublistId: string;
+  setCurrentSublistId: Dispatch<SetStateAction<string>>;
+  subLists: Array<SubListType>;
+  handleDeleteList: (listId: string) => Promise<any>;
+  setCurrentMainList: Dispatch<SetStateAction<string>>
+  currentMainList: string;
+  currentItems: Array<SubListItem>; 
+  setCurrentItems: Dispatch<SetStateAction<Array<SubListItem>>>
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  setMainLists: Dispatch<SetStateAction<Array<MainListType>>>
+  setSubLists: Dispatch<SetStateAction<Array<SubListType>>>
+  setItems: Dispatch<SetStateAction<Array<SubListItem>>>
 }
 
 interface AppStateContextValue extends AppState {}
+
+const useAuth = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUserId(user.uid);
+      } else {
+        setIsLoggedIn(false);
+        setUserId('');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { isLoggedIn, userId, setIsLoggedIn };
+};
+
+
+const useInitialDataFetch = (userId, shouldFetchData) => {
+  const [mainLists, setMainLists] = useState<Array<MainListType>>([]);
+  const [subLists, setSubLists] = useState<Array<SubListType>>([]);
+  const [items, setItems] = useState<Array<SubListItem>>([]);
+
+  useEffect(() => {
+    if (shouldFetchData) {
+      const fetchData = async () => {
+        try {
+          // Fetch all mainLists
+          const mainListsSnapshot = await   db
+          .collection('/mainLists')
+          .where('ownerId', '==', userId)
+          .get();
+        const mainListsData = mainListsSnapshot.docs.map(doc => ({
+          name: doc.data().name,
+          uuid: doc.id,
+          ...doc.data()
+      }));
+      setMainLists(mainListsData);
+
+          const subListsSnapshot = await db
+          .collection('sublists')
+          .where('ownerId', '==', userId)
+          .get();
+      const subListsData = subListsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          isRepeating:doc.data().isRepeating,
+          name:doc.data().name,
+          repeatDays:doc.data().repeatDays,
+          items:doc.data().items,
+          parentList:doc.data().parentList,
+          ownerId:doc.data().ownerId,
+          ...doc.data()
+      }));
+      setSubLists(subListsData);
+
+          const itemsSnapshot = await db
+          .collection('items')
+          .where('userId', '==', userId)
+          .get();
+      const itemsData = itemsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+          isRepeating:doc.data().isRepeating,
+          sublistId:doc.data().parentList,
+          isComplete:doc.data().isComplete,
+          userId:doc.data().userId,
+          ...doc.data()
+      }));
+          setItems(itemsData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [shouldFetchData, userId]);
+
+  return { mainLists, subLists, items, setMainLists, setSubLists, setItems };
+};
 
 export const AppStateContext = createContext<AppStateContextValue | undefined>(undefined);
 
@@ -48,34 +152,24 @@ interface AppStateProviderProps {
 export const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
 
   // state
-const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-const [userId, setUserId] = useState<string>('')
+
 const [email, setEmail] = useState<string>('')
 const [password, setPassword] = useState<string>('');
-const [mainLists, setMainList] = useState<Array<MainListType>>([]);
-const [sublists, setSublist] = useState<SubListType[]>([]);
 
-  // functions
-  useEffect(()=>{
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
-            const uid = user.uid;
-            setIsLoggedIn(true)
-            setUserId(uid);
-        } else {
-            setIsLoggedIn(false)
-            setUserId('')
-            setEmail('')
-            setPassword('')
-        }
-      });
-}, [])
+const [currentSublists, setCurrentSublists] = useState<SubListType[]>([]);
+const [currentMainList, setCurrentMainList] = useState<string>('')
+const [currentSublistId, setCurrentSublistId] = useState<string>("");
+const [currentItems, setCurrentItems] = useState<Array<SubListItem>>([]);
+const [shouldFetchData, setShouldFetchData] = useState(false);
+const { isLoggedIn, userId, setIsLoggedIn } = useAuth();
+const { mainLists, subLists, items, setMainLists, setSubLists, setItems } = useInitialDataFetch(userId, shouldFetchData);
+
 
 useEffect(() => {
-    fetchUserLists()
-},[userId])
+  if (isLoggedIn && !shouldFetchData) {
+    setShouldFetchData(true);
+  }
+}, [isLoggedIn, shouldFetchData]);
 
   //submit to database
   const createMainList = async (listName) => {
@@ -94,56 +188,18 @@ useEffect(() => {
     
 };
 
-const fetchUserLists = async () => {
-    try {
-      // Get current user
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        // Query Firestore for user's lists
-        const listsSnapshot = await db
-          .collection('mainLists')
-          .where('ownerId', '==', currentUser.uid)
-          .get();
+const handleDeleteList = async (listId) => {
+  try {
+    await db
+    .collection('/mainLists')
+    .doc(listId).delete();
 
-        // Extract lists data from snapshot
-        const userLists = listsSnapshot.docs.map(doc => ({
-          uuid: doc.id,
-          name: doc.data().name,
-
-          ...doc.data()
-        }));
-
-        // Update state with user's lists
-        setMainList(userLists);
-        console.log('userlists',userLists)
-      }
-    } catch (error) {
-      console.error('Error fetching user lists:', error);
-    }
+  } catch(error) {
+    console.error('Error deleting list:', error);
+        throw error;
   }
+}
 
-  // Function to fetch sublists for a given main list
-const fetchSublistsForMainList = async (mainListId: string) => {
-    try {
-      // Query Firestore for sublists associated with the main list
-      const sublistsSnapshot = await db
-        .collection('sublists')
-        .where('parentList', '==', mainListId)
-        .get();
-  
-      // Extract sublists data from snapshot
-      const sublists = sublistsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        name: doc.data().name,
-        ...doc.data()
-      }));
-  
-      return sublists;
-    } catch (error) {
-      console.error('Error fetching sublists:', error);
-      throw error;
-    }
-  };
 
   const addSublistToDatabase = async (sublistData: SubListType) => {
     try {
@@ -155,20 +211,57 @@ const fetchSublistsForMainList = async (mainListId: string) => {
     }
   };
 
+  const addItemToDatabase = async (itemData: SubListItem) => {
+    try {
+        await db.collection('items').add(itemData);
+    } catch (error) {
+        console.error('Error adding item to database:', error);
+        throw error;
+    }
+  }
+
+
+
+
+    const updateItemInDatabase = async (itemId: string, updatedItemData: SubListItem | undefined) => {
+      if (updatedItemData) {
+        try {
+          await db.collection('items').doc(itemId).update(updatedItemData);
+          console.log('Item updated successfully');
+          } catch (error) {
+            console.error('Error updating item in database: ', error);
+            throw error;
+          }
+        } 
+      };
+
   const contextValue: AppStateContextValue = {
+   userId,
    isLoggedIn,
-   setIsLoggedIn,
    email,
    setEmail,
    password,
    setPassword,
    mainLists,
-   setMainList,
-   sublists,
-   setSublist,
+   subLists,
+   currentSublists,
+   setCurrentSublists,
    createMainList,
-   fetchSublistsForMainList,
-   addSublistToDatabase
+   addSublistToDatabase,
+   addItemToDatabase,
+   items,
+   updateItemInDatabase,
+   currentSublistId, 
+   setCurrentSublistId,
+   handleDeleteList,
+   currentMainList,
+   setCurrentMainList,
+   currentItems, 
+   setCurrentItems,
+   setIsLoggedIn,
+   setMainLists,
+   setSubLists,
+   setItems
   };
 
   

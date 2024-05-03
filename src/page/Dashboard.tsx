@@ -16,28 +16,24 @@ if (!myContextValue) {
 }
 const { 
     mainLists,
+    handleDeleteList
 } = myContextValue;
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useEffect(()=>{
-   console.log(mainLists)
-     
-}, [])
+
  
   return (
     <>
     <Header />
     <section className={styles.main}>        
     <div>DashMain</div>
-
-    <NavLink to="/create-list" >Create new tour</NavLink>
-<div>
-    {mainLists.map(list =>
-     <NavLink to={`/list/${list.uuid}`}>
-     {list.name}
-   </NavLink>
-  )}
+  <div className={styles.listContainer}>
+      {mainLists.map(list =>
+      <div key={list.uuid} className={styles.item}><NavLink to={`/list/${list.uuid}`}>
+          <div  className={styles.tape}><span >{list.name}</span></div>
+        </NavLink><span ><button  onClick={() => handleDeleteList(list.uuid)}>Delete List</button></span></div>
+    )}
   </div>
+  <NavLink to="/create-list" >Create new tour</NavLink>
     </section>
     </>
   )
