@@ -37,7 +37,6 @@ const handleInputChange = (event) => {
  
   return (
     <>
-    <Header />
     <div className={styles.form}>
     <form  onSubmit={handleSubmit}>
     <label>

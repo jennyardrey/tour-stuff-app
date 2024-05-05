@@ -1,10 +1,9 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase.js';
 import {AppStateContext} from '../app-state.tsx';
 import styles from "../styles/Login.module.scss"
-import logo from "../assets/FreeLogo.png"
 
  
 const Signup = () => {
@@ -47,9 +46,7 @@ const {
  
   return (
        
-        <section className={styles.main}>
- <img className={styles.logo} alt="logo for tour stuff" src={logo} />           
-                                                                                                       
+        <section className={styles.main}>                                                                                                       
                     <form className={styles.loginBox}>  
                     <h2>Sign Up</h2>                                                                                           
                         <div className={styles.userBox}>

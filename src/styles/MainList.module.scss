@@ -1,52 +1,33 @@
 .main {
     position: relative;
-    top: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    height: 100%;
+   
 }
 
 .listContainer {
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    
+}
+.link {
+  padding: 10px;
+  text-decoration: none;
 }
 
-.tape {
-    position: relative;
-    display: inline-block;
-    padding: 20px;
-    margin: 20px 0;
-    span {
-        z-index: 3;
-        position: relative;
-        font-family: "Permanent Marker", cursive;
-        font-weight: 400;
-        font-style: normal;
-        font-size: 30px;
-        line-height: 30px;
-        color: black;
-    }
-  }
-  
-  .tape:before {
-    content: "";
-    background: url('../assets/tape.png') no-repeat;
-    background-position: center;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-35%);
-    width: 100px; /* Adjust width as needed */
-    height: 40px; /* Adjust height as needed */
-    width: 300px;
-    height: 65px;
-    z-index: 0;
-    background-size: 300px;
-  }
+.listName {
+  font-size: 24px;
+  color: #595cff;
+}
+
 
   .createButton {
-    background-color: #6b370d;
-    color: white;
+    background-color: #fff;
+    color: #595cff;
     padding: 1rem 3rem;
     border-radius: 10rem;
     text-decoration: none;

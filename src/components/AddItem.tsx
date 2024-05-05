@@ -1,28 +1,24 @@
 import React, { useContext, useState } from 'react';
 import { AppStateContext, SubListItem, SubListType } from '../app-state.tsx';
-import { useNavigate } from 'react-router-dom';
 
 
 function AddItem  ( {sublist} ) {
 const myContextValue = useContext(AppStateContext);
 const [itemName, setItemName] = useState('');
-const [isRepeating, setIsRepeating] = useState(false);
-const navigate = useNavigate();
 // Perform a null check on myContextValue
 if (!myContextValue) {
     // Handle the case when the context value is undefined
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-    currentSublists, 
     setCurrentSublists,
     addItemToDatabase,
     userId,
     setCurrentItems,
-    subLists
+    subLists,
+    items
 
 } = myContextValue;
-
 
 const handleItemAdded = (newItem) => {
   setCurrentItems(prevItems => [...prevItems, newItem]);
@@ -32,16 +28,12 @@ const handleItemAdded = (newItem) => {
     setItemName(event.target.value);
   };
 
-  const handleRepeatingChange = (event) => {
-    setIsRepeating(event.target.checked);
-  };
  
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const newItem: SubListItem = {
       name: itemName,
-      isRepeating: isRepeating,
       sublistId: sublist,
       isComplete: false,
       userId: userId,
@@ -63,13 +55,13 @@ const handleItemAdded = (newItem) => {
         }
         return sublist;
       });
+      items.push(newItem)
       addItemToDatabase(newItem)
       handleItemAdded(newItem)
       setCurrentSublists(updatedSublists); // Updating the subtasks array in app state
   
     // Reset form state after submission
     setItemName('');
-    setIsRepeating(false);
   }; 
 
   return (
@@ -84,17 +76,9 @@ const handleItemAdded = (newItem) => {
             required
           />
         </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={isRepeating}
-            onChange={handleRepeatingChange}
-          />
-          Do not repeat
-        </label>
-        <button type="submit">Add Item</button>
+       
+        <button type="submit">Add</button>
       </form>
-      <button onClick={() => navigate(-1)}>Go back</button>
     </div>
   );
 };

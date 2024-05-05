@@ -5,13 +5,13 @@ import 'firebase/firestore';
 
 
 export interface SubListType {
-    isRepeating: boolean;
     name: string;
-    repeatDays: Array<string>;
+    isResetting: boolean;
     items: Array<SubListItem>;
     parentList: string | undefined;
     id?: string | undefined;
     ownerId: string;
+    resetTime?: string;
 }
 
 export interface MainListType {
@@ -22,7 +22,6 @@ export interface MainListType {
 export interface SubListItem {
     id?: string | undefined;
     name: string;
-    isRepeating: boolean;
     sublistId: string;
     isComplete: boolean;
     userId: string;
@@ -107,12 +106,12 @@ const useInitialDataFetch = (userId, shouldFetchData) => {
           .get();
       const subListsData = subListsSnapshot.docs.map(doc => ({
           id: doc.id,
-          isRepeating:doc.data().isRepeating,
           name:doc.data().name,
-          repeatDays:doc.data().repeatDays,
           items:doc.data().items,
           parentList:doc.data().parentList,
           ownerId:doc.data().ownerId,
+          isResetting:doc.data().isResetting,
+          resetTime:doc.data().resetTime,
           ...doc.data()
       }));
       setSubLists(subListsData);
@@ -124,10 +123,10 @@ const useInitialDataFetch = (userId, shouldFetchData) => {
       const itemsData = itemsSnapshot.docs.map(doc => ({
           id: doc.id,
           name: doc.data().name,
-          isRepeating:doc.data().isRepeating,
           sublistId:doc.data().parentList,
           isComplete:doc.data().isComplete,
           userId:doc.data().userId,
+
           ...doc.data()
       }));
           setItems(itemsData);
@@ -136,7 +135,9 @@ const useInitialDataFetch = (userId, shouldFetchData) => {
         }
       };
 
+
       fetchData();
+      
     }
   }, [shouldFetchData, userId]);
 
@@ -261,7 +262,7 @@ const handleDeleteList = async (listId) => {
    setIsLoggedIn,
    setMainLists,
    setSubLists,
-   setItems
+   setItems,
   };
 
   

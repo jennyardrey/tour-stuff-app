@@ -3,7 +3,6 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase_setup/firebase';
 import { NavLink, useNavigate } from 'react-router-dom'
 import styles from "../styles/Login.module.scss"
-import logo from "../assets/FreeLogo.png"
  
 const Login = () => {
     const navigate = useNavigate();
@@ -30,7 +29,6 @@ const Login = () => {
         <>
                
                 <section className={styles.main}>
-                        <img className={styles.logo} alt="logo for tour stuff" src={logo} />                       
                         <form className={styles.loginBox}>  
                         <h2>Login</h2>                                            
                             <div className={styles.userBox}>

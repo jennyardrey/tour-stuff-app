@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react';
-import {AppStateContext} from '../app-state.tsx';
+import React, { useContext, useEffect, useState } from 'react';
+import {AppStateContext, MainListType} from '../app-state.tsx';
 import { NavLink, useParams } from 'react-router-dom';
-import Header from '../components/Header.tsx';
 import styles from '../styles/MainList.module.scss'
  
 const ListMain = () => {
 const myContextValue = useContext(AppStateContext);
 const { listId } = useParams<{ listId: any }>();
+const [thisList, setThisList] = useState<MainListType>();
+
 // Perform a null check on myContextValue
 if (!myContextValue) {
     // Handle the case when the context value is undefined
@@ -17,6 +18,7 @@ const {
     setCurrentSublists,
     currentSublists,
     setCurrentMainList,
+    mainLists
 } = myContextValue;
 
 
@@ -29,18 +31,24 @@ useEffect(() => {
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [listId, subLists]);
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useEffect(() => {
+  const list = mainLists.find(list => list.id === listId);
+  if (list) setThisList(list);
+}, [listId]);
+
  
   return (
     <>
-     <Header />
+     
      <div  className={styles.main}>
-    <section className={styles.listContainer}>        
+    <section className={styles.listContainer}>    
+    <h1>{thisList?.name}</h1>    
     {currentSublists?.map(list =>
-    <NavLink key={list.id} to={`/sublist/${list.id}`} >
-        <div className={styles.tape}><span>
+    <NavLink className={styles.link} key={list.id} to={`/sublist/${list.id}`} >
+        <div className={styles.listName}><span>
     {list.name}
-    {list.isRepeating}
-    {list.repeatDays}
+    {list.isResetting}
     </span>
     </div>
     </NavLink>

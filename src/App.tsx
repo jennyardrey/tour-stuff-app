@@ -10,13 +10,15 @@ import CreateList from './page/CreateList.tsx';
 import ListMain from './page/ListMain.tsx';
 import CreateSublist from './page/CreateSublist.tsx';
 import Sublist from './page/Sublist.tsx';
+import Header from './components/Header.tsx';
 
 function App() {
  
   return (
     <Router>
       <div className={styles.body}>
-                             
+      <Header />   
+        <div className={styles.main}>
             <Routes>     
                 <Route path="/" element={<Home/>}/>
                 <Route path="/home" element={<Dashboard />}/>                                                                
@@ -27,7 +29,7 @@ function App() {
                 <Route path="/create-sublist/:listId" element={<CreateSublist/>}/>
                 <Route path="/sublist/:sublistId" element={<Sublist/>}/>
             </Routes>                    
-
+        </div> 
       </div>
     </Router>
   );

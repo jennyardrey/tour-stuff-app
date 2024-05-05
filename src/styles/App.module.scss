@@ -1,5 +1,42 @@
+
+
+@-webkit-keyframes AnimateBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @keyframes AnimateBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 .body {
     width: 100vw;
-    min-height: 100vh;
-    background-color: #D06A19;
+    height: 100dvh;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    background: linear-gradient(-45deg, #fff 0%, #6b6df9 100%);
+  -webkit-animation: AnimateBG 5s ease infinite;
+          animation: AnimateBG 5s ease infinite;
+          background-size: 300% 300%;
 }
+
+.main {
+    height: 80%;
+}
+
+

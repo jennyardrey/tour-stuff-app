@@ -1,25 +1,18 @@
 .main {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
 }
 
-.logo {
-    position: absolute;
-    top: 0;
-}
-
 
 .loginBox {
-
-    width: 400px;
+    width: 80%;
     padding: 40px;
-   
-    background: rgba(0,0,0,.5);
+    background: rgba(0,0,0,.2);
     box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    box-shadow: 0 15px 25px rgba(0,0,0,.3);
     border-radius: 10px;
   }
   
@@ -58,7 +51,7 @@
   .loginBox .userBox input:valid ~ label {
     top: -20px;
     left: 0;
-    color: #f403dc;
+    color: #595cff;
     font-size: 12px;
   }
   
@@ -66,7 +59,7 @@
     position: relative;
     display: inline-block;
     padding: 10px 20px;
-    color: #f403dc;
+    color: #595cff;
     font-size: 16px;
     text-decoration: none;
     text-transform: uppercase;
@@ -77,13 +70,13 @@
   }
   
   .loginBox button:hover {
-    background: #f403dc;
+    background: #595cff;
     color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 5px #f403dc,
-                0 0 25px #f403dc,
-                0 0 50px #f403dc,
-                0 0 100px #f403dc;
+    box-shadow: 0 0 5px #595cff,
+                0 0 25px #595cff,
+                0 0 50px #595cff,
+                0 0 100px #595cff;
   }
   
   

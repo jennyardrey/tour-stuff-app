@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import {AppStateContext, SubListType} from '../app-state.tsx';
 import { useParams } from 'react-router-dom';
 import AddItem from "../components/AddItem.tsx"
-import Header from '../components/Header.tsx';
 import styles from '../styles/Sublists.module.scss'
 import { useNavigate } from 'react-router-dom';
+import plus from '../assets/plus.svg'
+import { isInaccessible } from '@testing-library/react';
 
 
 const Sublist = () => {
@@ -26,18 +27,49 @@ const {
    setItems,
    updateItemInDatabase,
    currentItems, 
-   setCurrentItems
+   setCurrentItems,
+   currentSublists
 } = myContextValue;
 
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useEffect(() => {
-        if (sublistId) {
-            const filteredItems = items.filter(items => items.sublistId === sublistId);
-            setCurrentItems(filteredItems)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-},[sublistId, items])
+  if (sublistId) {
+      const filteredItems = items.filter(items => items.sublistId === sublistId);
+      setCurrentItems(filteredItems);
+  }
+}, [sublistId, items, setCurrentItems]);
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useEffect(() => {
+  const list = currentSublists.find(list => list.id === sublistId);
+  if (list) setThisList(list);
+}, [sublistId, currentSublists]);
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useEffect(() => {
+  if (thisList && thisList.isResetting && thisList.resetTime) {
+      const [hours, minutes] = thisList.resetTime.split(":").map(Number);
+      const resetTimeDate = new Date();
+      resetTimeDate.setHours(hours);
+      resetTimeDate.setMinutes(minutes);
+
+      const resetTimeEpoch = resetTimeDate.getTime();
+      const lastResetKey = `lastReset_${sublistId}`;
+      const lastResetTime = localStorage.getItem(lastResetKey);
+
+      if (!lastResetTime || (Date.now() > resetTimeEpoch && new Date(Number(lastResetTime)).getDate() !== resetTimeDate.getDate())) {
+          currentItems.forEach(item => {
+              if (item.id && item.isComplete) {
+                  item.isComplete = false;
+                  updateItemInDatabase(item.id, item);
+              }
+          });
+
+          localStorage.setItem(lastResetKey, String(Date.now()));
+      }
+  }
+}, [thisList, currentItems, updateItemInDatabase, sublistId]);
+
+
 
 
 const handleItemCheckboxChange = (itemId: string) => {
@@ -61,25 +93,29 @@ const handleItemCheckboxChange = (itemId: string) => {
   //think i need to have a useEffect to re-render the data after its updated the item
 
 const handleAddItemClick = () => {
-  setIsAddItemVisible(true);
+  setIsAddItemVisible(!isAddItemVisible);
 };
   return (
     <>
-      <Header />
       <div className={styles.main}>
         <section>
+          <h2>{thisList?.name}</h2>
+          {thisList?.isResetting ? <p>This list resets at {thisList.resetTime}</p> : null}
           {currentItems.map(item => (
-            <div key={item.id}>
+            <div className={styles.checkbox_wrapper_11} key={item.id}>
               <input
+              id={styles.complete}
                 type="checkbox"
+                name="r"
+                value="2"
                 checked={item.isComplete}
                 onChange={() => item.id && handleItemCheckboxChange(item.id)} />
-              <span>{item.name}</span>
+              <label htmlFor="complete">{item.name}</label>
             </div>
           ))}
         </section>
-        <section>
-          <button onClick={handleAddItemClick}>Add Item</button>
+        <section className={styles.addItemContainer}>
+          <button onClick={handleAddItemClick}><img src={plus} alt='add item' /></button>
           {isAddItemVisible && <AddItem sublist={sublistId} />}
         </section>
         <button onClick={() => navigate(-1)}>Go back</button>
