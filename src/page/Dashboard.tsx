@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-
+import plus from "../assets/plus.svg";
 import {AppStateContext} from '../app-state.tsx';
 import { NavLink } from 'react-router-dom';
 import trashIcon from '../assets/trash.svg';
@@ -24,7 +24,7 @@ const {
   return (
     <>
     <section className={styles.main}>        
-    <div>Tours</div>
+    <h1>My Tours</h1>
   <div className={styles.listContainer}>
       {mainLists.map(list =>
       <div key={list.uuid} className={styles.item}><NavLink to={`/list/${list.uuid}`}>
@@ -36,7 +36,7 @@ const {
       </div>
     )}
   </div>
-  <NavLink to="/create-list" >Create new tour</NavLink>
+  <NavLink className={styles.create} to="/create-list" ><img className={styles.plus} src={plus} alt="plus icon - create a new tour" />Create new tour</NavLink>
     </section>
     </>
   )

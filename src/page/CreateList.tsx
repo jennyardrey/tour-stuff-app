@@ -18,7 +18,7 @@ if (!myContextValue) {
     return null; // or display a loading indicator, error message, etc.
 }
 const { 
-   setMainList,
+   setMainLists,
    createMainList
 } = myContextValue;
 const handleInputChange = (event) => {
@@ -30,17 +30,17 @@ const handleInputChange = (event) => {
     createMainList(newList?.name)
     .then(res => newList.uuid = res);
 
-    setMainList(prevList => [...prevList, newList]);
+    setMainLists(prevList => [...prevList, newList]);
     navigate("/home")
   };
 
  
   return (
-    <>
+    <div className={styles.createContainer}>
     <div className={styles.form}>
     <form  onSubmit={handleSubmit}>
     <label>
-      Add a new tour:
+      Tour name:
     </label>
     <input
         type="text"
@@ -53,7 +53,7 @@ const handleInputChange = (event) => {
     </div>
    <button onClick={() => navigate(-1)}>Go back</button>
   
-  </>
+  </div>
   )
 }
  

@@ -1,18 +1,29 @@
+.createContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .form {
-    height: 100%;
+   
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
     justify-content: space-evenly;
+    padding: 20px;
+
 }
 
 .form form {
     display: flex;
-
+    gap: 20px;
     align-items: center;
     flex-direction: column;
 }
+
 
 button {
     background-color: #fff;
