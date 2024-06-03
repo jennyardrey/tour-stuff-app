@@ -19,9 +19,14 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 0;
+
     a {
         text-decoration: none;
+        flex-grow: 1;
+        color: inherit;
     }
+
     button {
         width: 30px;
         background-color: transparent;
@@ -33,17 +38,29 @@
     }
 }
 
-
-
-.plus {
-    height: 25px;
-    width: 25px;
-    margin-right: 10px;
+.tape {
+    font-size: 24px;
+    color: #595cff;
 }
+
 .create {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color:#6b6df9;
-}
+    color: #6b6df9;
+    background-color: #fff;
+    padding: 1rem 3rem;
+    border-radius: 10rem;
+    margin-top: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
+    &:hover {
+        background-color: #f0f0ff;
+    }
+
+    img {
+        height: 25px;
+        width: 25px;
+        margin-right: 10px;
+    }
+}

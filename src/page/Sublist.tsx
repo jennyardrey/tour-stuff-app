@@ -5,6 +5,7 @@ import AddItem from "../components/AddItem.tsx"
 import styles from '../styles/Sublists.module.scss'
 import { useNavigate } from 'react-router-dom';
 import plus from '../assets/plus.svg'
+import backIcon from '../assets/back.svg'
 import { isInaccessible } from '@testing-library/react';
 
 
@@ -118,7 +119,7 @@ const handleAddItemClick = () => {
           <button onClick={handleAddItemClick}><img src={plus} alt='add item' /></button>
           {isAddItemVisible && <AddItem sublist={sublistId} />}
         </section>
-        <button onClick={() => navigate(-1)}>Go back</button>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}><img src={backIcon} alt="back to sublists"/>Go back</button>
       </div>
     </>
   );

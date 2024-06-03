@@ -39,7 +39,9 @@
     ]
   },
   "devDependencies": {
-    "css-loader": "^6.10.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "css-loader": "^6.11.0",
     "react-router-dom": "^6.22.3",
     "sass": "^1.72.0",
     "sass-loader": "^14.1.1",

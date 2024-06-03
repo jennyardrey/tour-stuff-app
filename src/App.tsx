@@ -16,8 +16,7 @@ function App() {
  
   return (
     <Router>
-      <div className={styles.body}>
-      <Header />   
+      <div className={styles.body}> 
         <div className={styles.main}>
             <Routes>     
                 <Route path="/" element={<Home/>}/>

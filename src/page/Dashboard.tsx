@@ -1,13 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import plus from "../assets/plus.svg";
 import {AppStateContext} from '../app-state.tsx';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import trashIcon from '../assets/trash.svg';
-import styles from "../styles/Dashboard.module.scss"
+import settingsIcon from '../assets/settings.svg';
+import styles from "../styles/Dashboard.module.scss";
+import Settings from '../components/Settings.tsx';
 
  
 const Home = () => {
+  const [IsSettingsVisible, setIsSettingsVisible] = useState(false);
+  const { sublistId } = useParams<{ sublistId: string }>();
+
 const myContextValue = useContext(AppStateContext);
+const handleSettingsClick = () => {
+  setIsSettingsVisible(!IsSettingsVisible);
+};
 
 // Perform a null check on myContextValue
 if (!myContextValue) {
