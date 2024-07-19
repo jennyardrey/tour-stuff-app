@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import plus from "../assets/plus.svg";
 import {AppStateContext} from '../app-state.tsx';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import trashIcon from '../assets/trash.svg';
 import settingsIcon from '../assets/settings.svg';
 import styles from "../styles/Dashboard.module.scss";
@@ -16,6 +16,7 @@ const myContextValue = useContext(AppStateContext);
 const handleSettingsClick = () => {
   setIsSettingsVisible(!IsSettingsVisible);
 };
+const navigate = useNavigate()
 
 // Perform a null check on myContextValue
 if (!myContextValue) {
@@ -26,7 +27,6 @@ const {
     mainLists,
     handleDeleteList
 } = myContextValue;
-
 
  
   return (
@@ -46,6 +46,7 @@ const {
   </div>
   <NavLink className={styles.create} to="/create-list" ><img className={styles.plus} src={plus} alt="plus icon - create a new tour" />Create new tour</NavLink>
     </section>
+    <button onClick={() => navigate('/affirmation', { replace: true })} className={styles.affermation}>🤯</button>
     </>
   )
 }
