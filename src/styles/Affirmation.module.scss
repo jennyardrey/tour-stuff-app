@@ -1,0 +1,48 @@
+.affirmContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+  }
+
+  
+  .button {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #61dafb;
+    color: #282c34;
+    transition: background-color 0.3s ease;
+    bottom: 0;
+    position: absolute;
+  
+    &:hover {
+      background-color: #21a1f1;
+    }
+  }
+  
+  .affirmationText {
+    font-size: 3.5rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #52e5e7);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s infinite linear;
+    padding: 20px;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+  
